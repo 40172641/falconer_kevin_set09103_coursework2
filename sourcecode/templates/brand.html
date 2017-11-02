@@ -1,0 +1,8 @@
+{% extends "header.html" %}
+{% block content %}
+  {% for ex in clothes %}
+  <p>Name:  {{ ex[0] }} </p>
+  <p>Price: {{ ex[1] }} </p>
+  {% endfor %}
+{% endblock %}
+

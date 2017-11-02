@@ -1,0 +1,7 @@
+{% extends "header.html" %}
+{% block content %}
+  {% for brand in clothes %}
+  <p>Name:<a href='{{ brand[0] }}'> {{ brand[0] }} </a></p>
+  {% endfor %}
+{% endblock %}
+

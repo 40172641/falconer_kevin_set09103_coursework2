@@ -1,5 +1,11 @@
 {% extends "header.html" %}
 {% block content %}
-<h4>Coursework 2 </h4>
+  {% for ex in clothing %}
+  <p>ID: {{ ex[0] }} </p>
+  <p>Brand: {{ ex[1] }} </p>
+  <p>Product: {{ ex[2] }} </p>
+  <p>Price: £{{ ex[3] }} </p>
+  <p>Date: {{ex[4] }} </p>
+  {% endfor %}
 {% endblock %}
 
