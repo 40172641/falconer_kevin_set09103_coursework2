@@ -44,15 +44,19 @@ def brands():
     clothing = db.cursor().execute('SELECT DISTINCT brand FROM clothing ORDER BY brand')
     return render_template('brands.html', clothing=clothing)
 
-@app.route('/<brand>/')
-def brand():
-  db=get_db(brand)
-  clothing = db.cursor().execute("""SELECT * FROM clothing WHERE title=?"""),(brand)
+@app.route('/brands/<brand>/')
+def brand(brand):
+  db=get_db()
+  clothing = db.cursor().execute('SELECT * FROM clothing WHERE brand=?',(brand,))
   return render_template('brand.html', clothing=clothing)
 
 @app.route('/login/')
 def login():
   return render_template("login.html")
+
+@app.route('/register/')
+def register():
+  return render_tempalte("register.html")
 
 #Error Handler
 @app.errorhandler(404)
