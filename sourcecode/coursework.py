@@ -30,24 +30,29 @@ def init_db():
 @app.route('/')
 def route():
         db = get_db()
-        date = datetime.now().strftime("%Y-%M-%d %H:%M:%S")
+        timestamp = datetime.now().strftime('%Y-%M-%D %H:%M:%S')
+        print timestamp
         #db.cursor().execute('DELETE FROM clothing')
-      #  db.cursor().execute('INSERT INTO clothing VALUES(2000,"Champion","T-Shirt", 37.99, "2015")')
+        #db.cursor().execute('INSERT INTO clothing VALUES(2000,"Champion","T-Shirt", 37.99, %s)'(timestamp))
         db.commit()
         clothing = db.cursor().execute('SELECT * FROM clothing ORDER BY date DESC LIMIT 5')
         return render_template('home.html', clothing=clothing)
 
-@app.route('/<brand>/')
-def brands(brand):
+@app.route('/brands/')
+def brands():
     db=get_db()
-    clothing = db.cursor().execute('SELECT brand FROM clothing')
+    clothing = db.cursor().execute('SELECT DISTINCT brand FROM clothing ORDER BY brand')
     return render_template('brands.html', clothing=clothing)
 
 @app.route('/<brand>/')
-def brand(title):
-  db=get_db()
-  clothing = db.cursor().execute("""SELECT * FROM clothing WHERE title=?"""),(title)
+def brand():
+  db=get_db(brand)
+  clothing = db.cursor().execute("""SELECT * FROM clothing WHERE title=?"""),(brand)
   return render_template('brand.html', clothing=clothing)
+
+@app.route('/login/')
+def login():
+  return render_template("login.html")
 
 #Error Handler
 @app.errorhandler(404)
