@@ -75,6 +75,11 @@ def route():
         clothing = db.cursor().execute('SELECT * FROM clothing ORDER BY date DESC LIMIT 5')
         return render_template('home.html', clothing=clothing)
 
+@app.route('/latest/')
+def latest():
+  return "Latest Clothes"
+  
+
 @app.route('/brands/')
 def brands():
     db=get_db()
@@ -92,6 +97,8 @@ def product(brand, id):
   db = get_db()
   clothing = db.cursor().execute('SELECT * FROM clothing WHERE brand=? AND id=?',(brand, id))
   return render_template('product.html', clothing=clothing)
+  #else:
+   # return render_template('error.html')
 
 @app.route('/logout/')
 def logout():
@@ -102,6 +109,23 @@ def logout():
 @requires_login
 def admin():
   return render_template("admin.html")
+
+@app.route("/admin/add-item/", methods=['POST', 'GET'])
+@requires_login
+def additem():
+  db = get_db()
+  if request.method == 'POST':
+    id = random.randrange(1000,100000, 2)
+    brand = request.form['brand']
+    product_type = request.form['product_type']
+    price = request.form['price']
+    date = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+    db.cursor().execute('INSERT INTO clothing VALUES(?,?,?,?,?)',(id, brand, product_type, price, date))
+    db.commit()
+    return "Addition Successful"
+  else:
+    return render_template('add.html')
+
 
 @app.route("/admin/messages/")
 @requires_login
