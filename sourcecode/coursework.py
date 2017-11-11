@@ -9,6 +9,7 @@ from datetime import datetime
 from flask import Flask, redirect, url_for, render_template, request, session
 app = Flask(__name__)
 db_location = 'static/test.db'
+dbcontact_location ='static/contact.db'
 app.secret_key = 'AOZr984753/3234/xyYR/!JER'
 
 valid_email = 'admin'
@@ -24,7 +25,7 @@ def requires_login(f):
     def decorated(*args, **kwargs):
         status = session.get('logged_in', False)
         if not status:
-            return redirect(url_for('.route'))
+            return redirect(url_for('.login'))
         return f(*args, **kwargs)
     return decorated
 
@@ -35,16 +36,31 @@ def get_db():
       g.db = db
   return db
 
+def get_dbcontact():
+  db_contact = getattr(g, 'db_contact', None)
+  if db_contact is None:
+    db_contact = sqlite3.connect(dbcontact_location)
+    g.db_contact = db_contact
+  return db_contact
+
 @app.teardown_appcontext
 def close_db_connection(exception):
     db = getattr(g, 'db', None)
     if db is not None:
         db.close()
 
+
 def init_db():
     with app.app_context():
         db = get_db()
         with app.open_resource('static/schema.sql', mode='r') as f:
+          db.cursor().executescript(f.read())
+        db.commit()
+
+def init_dbcontact():
+    with app.app_context():
+        db_contact = get_dbcontact()
+        with app.open_resource('static/contact.sql', mode='r') as f:
           db.cursor().executescript(f.read())
         db.commit()
 
@@ -74,12 +90,19 @@ def brand(brand):
 @app.route('/logout/')
 def logout():
     session['logged_in'] = False
-    return redirect(url_for('.route'))
+    return redirect(url_for('.login'))
 
 @app.route("/admin/")
 @requires_login
 def admin():
-  return "Admin Page"
+  return render_template("admin.html")
+
+@app.route("/admin/messages/")
+@requires_login
+def messages():
+  db = get_dbcontact()
+  messages = db.cursor().execute('SELECT * FROM messages ORDER BY date DESC')
+  return render_template('messages.html', messages=messages)
 
 @app.route("/login/", methods=['GET', 'POST'])
 def login():
@@ -94,7 +117,22 @@ def login():
 
 @app.route('/register/')
 def register():
-  return render_tempalte("register.html")
+  return render_template("register.html")
+
+@app.route("/contact/", methods=['POST', 'GET'])
+def contact():
+  db=get_dbcontact()
+  if request.method == 'POST':
+    print request.form
+    names = request.form['name']
+    email = request.form['email']
+    message = request.form['message']
+    timestamp = datetime.now().strftime('%d-%m-%Y %H:%M')
+    db.cursor().execute('INSERT INTO messages VALUES(?,?,?,?)',(names, email, message, timestamp))
+    db.commit()
+    return render_template('response.html', name=names)
+  else:
+    return render_template('contact.html')
 
 #Error Handler
 @app.errorhandler(404)

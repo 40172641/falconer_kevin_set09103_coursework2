@@ -1,0 +1,13 @@
+<html>
+<body>
+<h1>FEEDBACK</h1>
+<h3>This is feedback from Users who have used the site</h3>
+
+  {% for message in messages %}
+  <p>Name: {{ message[0] }} </p>
+  <p>Email: {{ message[1] }} </p>
+  <p>Message: {{ message[2] }}</p>
+  <p>Date: {{ message[3] }}</p>
+  {% endfor %}
+</body>
+</html>
