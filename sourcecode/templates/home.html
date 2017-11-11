@@ -1,12 +1,9 @@
 {% extends "header.html" %}
   {% block content %}
-
+  <p>Latest Products</p>
   {% for ex in clothing %}
-  <p>ID: {{ ex[0] }} </p>
-  <p>Brand: {{ ex[1] }} </p>
-  <p>Product: {{ ex[2] }} </p>
-  <p>Price: £{{ ex[3] }} </p>
-  <p>Date: {{ex[4] }} </p>
+    <p>ID: {{ ex[0] }} <a href="brands/{{ ex[1] }}/{{ ex[0]}}"> Brand: {{ ex[1] }} Price: £{{ ex[3] }}</a></p>
+    <p>Date: {{ex[4] }} <p>
   {% endfor %}
 {% endblock %}
 

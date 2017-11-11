@@ -70,7 +70,7 @@ def route():
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         id = random.randrange(1000,100000,2)
         #db.cursor().execute('DELETE FROM clothing')
-        #db.cursor().execute('INSERT INTO clothing VALUES(?,"Palace","T-Shirt", 36.99, ?)',(id, timestamp,))
+        #db.cursor().execute('INSERT INTO clothing VALUES(?,"Champion","Jacket",49.99, ?)',(id, timestamp,))
         db.commit()
         clothing = db.cursor().execute('SELECT * FROM clothing ORDER BY date DESC LIMIT 5')
         return render_template('home.html', clothing=clothing)
@@ -86,6 +86,12 @@ def brand(brand):
   db=get_db()
   clothing = db.cursor().execute('SELECT * FROM clothing WHERE brand=?',(brand,))
   return render_template('brand.html', clothing=clothing)
+
+@app.route('/brands/<brand>/<id>')
+def product(brand, id):
+  db = get_db()
+  clothing = db.cursor().execute('SELECT * FROM clothing WHERE brand=? AND id=?',(brand, id))
+  return render_template('product.html', clothing=clothing)
 
 @app.route('/logout/')
 def logout():
