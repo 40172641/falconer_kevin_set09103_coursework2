@@ -6,7 +6,7 @@ from functools import wraps
 
 from datetime import datetime
 
-from flask import Flask, redirect, url_for, render_template, request, session
+from flask import Flask, redirect, url_for, render_template, request, session, json
 app = Flask(__name__)
 db_location = 'static/test.db'
 dbcontact_location ='static/contact.db'
@@ -75,11 +75,6 @@ def route():
         clothing = db.cursor().execute('SELECT * FROM clothing ORDER BY date DESC LIMIT 5')
         return render_template('home.html', clothing=clothing)
 
-@app.route('/latest/')
-def latest():
-  return "Latest Clothes"
-  
-
 @app.route('/brands/')
 def brands():
     db=get_db()
@@ -95,10 +90,12 @@ def brand(brand):
 @app.route('/brands/<brand>/<id>')
 def product(brand, id):
   db = get_db()
+  json_file=open('static/foundation.json').read()
+  brands=json.loads(json_file)
   clothing = db.cursor().execute('SELECT * FROM clothing WHERE brand=? AND id=?',(brand, id))
-  return render_template('product.html', clothing=clothing)
-  #else:
-   # return render_template('error.html')
+  for brand in brands:
+    if brand['id']==id:
+      return render_template('product.html', clothing=clothing, brands=brand)
 
 @app.route('/logout/')
 def logout():
@@ -120,12 +117,14 @@ def additem():
     product_type = request.form['product_type']
     price = request.form['price']
     date = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+    datafile = request.form['datafile']
+   # image = requests.get[datafile]
+   # image.save("static/img/%s.img"),(brand)
     db.cursor().execute('INSERT INTO clothing VALUES(?,?,?,?,?)',(id, brand, product_type, price, date))
     db.commit()
     return "Addition Successful"
   else:
     return render_template('add.html')
-
 
 @app.route("/admin/messages/")
 @requires_login
