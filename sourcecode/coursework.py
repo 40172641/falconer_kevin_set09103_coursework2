@@ -1,11 +1,32 @@
 from flask import Flask, g
 import sqlite3
+import random
+import bcrypt
+from functools import wraps
 
 from datetime import datetime
 
-from flask import Flask, redirect, url_for, render_template
+from flask import Flask, redirect, url_for, render_template, request, session
 app = Flask(__name__)
 db_location = 'static/test.db'
+app.secret_key = 'AOZr984753/3234/xyYR/!JER'
+
+valid_email = 'admin'
+valid_pwhash = bcrypt.hashpw('admin', bcrypt.gensalt())
+
+def check_auth(email, password):
+    if(email == valid_email and valid_pwhash == bcrypt.hashpw(password.encode('utf-8'), valid_pwhash)):
+      return True
+    return False
+
+def requires_login(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        status = session.get('logged_in', False)
+        if not status:
+            return redirect(url_for('.route'))
+        return f(*args, **kwargs)
+    return decorated
 
 def get_db():
   db = getattr(g, 'db', None)
@@ -30,10 +51,10 @@ def init_db():
 @app.route('/')
 def route():
         db = get_db()
-        timestamp = datetime.now().strftime('%Y-%M-%D %H:%M:%S')
-        print timestamp
+        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        id = random.randrange(1000,100000,2)
         #db.cursor().execute('DELETE FROM clothing')
-        #db.cursor().execute('INSERT INTO clothing VALUES(2000,"Champion","T-Shirt", 37.99, %s)'(timestamp))
+        #db.cursor().execute('INSERT INTO clothing VALUES(?,"Palace","T-Shirt", 36.99, ?)',(id, timestamp,))
         db.commit()
         clothing = db.cursor().execute('SELECT * FROM clothing ORDER BY date DESC LIMIT 5')
         return render_template('home.html', clothing=clothing)
@@ -50,9 +71,26 @@ def brand(brand):
   clothing = db.cursor().execute('SELECT * FROM clothing WHERE brand=?',(brand,))
   return render_template('brand.html', clothing=clothing)
 
-@app.route('/login/')
+@app.route('/logout/')
+def logout():
+    session['logged_in'] = False
+    return redirect(url_for('.route'))
+
+@app.route("/admin/")
+@requires_login
+def admin():
+  return "Admin Page"
+
+@app.route("/login/", methods=['GET', 'POST'])
 def login():
-  return render_template("login.html")
+    if request.method == 'POST':
+        user = request.form['email']
+        pw = request.form['password']
+
+        if check_auth(request.form['email'], request.form['password']):
+          session['logged_in'] = True
+          return redirect(url_for('.admin'))
+    return render_template('login.html')
 
 @app.route('/register/')
 def register():
