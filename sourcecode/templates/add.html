@@ -2,7 +2,7 @@
 <body>
   <h2> Add Item </h2>
 <ul>
-  <form action="" method="post" name="form">
+  <form action="{{ url_for('upload') }}" method="post" enctype=multipart/form=data name="form">
     <div>
       <label for="name">Brand:</label>
       <input type="text" name="brand" id="brand">
@@ -16,7 +16,7 @@
       <input type="text" name="price" id="price">
     </div>
     <div>
-      <input type="file" name="datafile" />
+      <input type="file" name="file" />
     <div></div>
     <input type="submit" name="submit" id="submit">
   </form>
