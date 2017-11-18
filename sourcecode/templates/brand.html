@@ -1,8 +1,9 @@
 {% extends "header.html" %}
 {% block content %}
   {% for ex in clothing %}
-  <p><a href='{{ ex[0] }}'>Name:  {{ ex[1] }}</a></p>
-  <p>Price: £{{ ex[3] }} </p>
+  <img src="{{id}}.jpg" height="100" width="100" />
+  <p><a href='{{ ex[0] }}'>{{ ex[2] }}</a></p>  
+  <p>Price: £{{ ex[5] }} </p>
   {% endfor %}
 {% endblock %}
 

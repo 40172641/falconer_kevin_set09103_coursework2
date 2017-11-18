@@ -14,11 +14,6 @@ from flask import Flask, redirect, url_for, render_template, request, session,js
 
 app = Flask(__name__)
 
-
-#UPLOAD_FOLDER = os.path.basename('static/img')
-#app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-
 db_location = 'static/foundation.db'
 dbcontact_location ='static/contact.db'
 app.secret_key = 'AOZr984753/3234/xyYR/!JER'
@@ -78,11 +73,6 @@ def init_dbcontact():
 @app.route('/')
 def route():
         db = get_db()
-        timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-        id = random.randrange(1000,100000,2)
-        #db.cursor().execute('DELETE FROM clothing')
-       # db.cursor().execute('INSERT INTO clothing VALUES(?,"Comme Des Garcons","Comme Des Garcons T-Shirt","T-Shirt", "Black", 65.00, ?)',(id, timestamp,))
-        db.commit()
         clothing = db.cursor().execute('SELECT * FROM clothing ORDER BY date DESC LIMIT 5')
         return render_template('home.html', clothing=clothing)
 
@@ -95,8 +85,8 @@ def brands():
 @app.route('/brands/<brand>/')
 def brand(brand):
   db=get_db()
-  clothing = db.cursor().execute('SELECT * FROM clothing WHERE brand=?',(brand,))
-  return render_template('brand.html', clothing=clothing)
+  clothing = db.cursor().execute('SELECT * FROM clothing WHERE brand=?',(brand,)) 
+  return render_template('brand.html', clothing=clothing, id=id)
 
 @app.route('/brands/<brand>/<id>')
 def product(brand, id):
@@ -121,28 +111,56 @@ def admin():
 @app.route("/admin/add-item/", methods=['POST', 'GET'])
 @requires_login
 def additem():
-# db = get_db()
+  db = get_db()
   if request.method == 'POST':
     id = random.randrange(1000,100000,2)
-    f = request.files['datafile']
-    f.save('static/img/%s.jpg' %id)
-   # id = random.randrange(1000,100000, 2)
+    print id
+   # os.makedirs('static/img/%s' %id)
+    image = request.files['datafile']
+    image.save('static/img/%s.jpg' %id)
+    print id
     brand = request.form['brand']
     product_type = request.form['product_type']
     price = request.form['price']
     colour = request.form['colour']
     product_name = request.form['product_name']
     date = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
-   # json_map = {}
-   # json_map["brand"] = brand
-   # json_map["id"] = id
-   # with open('test.json', 'a')as outfile:
-   #  json.dump(json_map, outfile)
-  #  db.cursor().execute('INSERT INTO clothing VALUES(?,?,?,?,?)',(id, brand, product_type, price, date))
-  #  db.commit()
-    return "Addition Successful"
+    db.cursor().execute('INSERT INTO clothing VALUES(?,?,?,?,?,?,?)',(id, brand, product_name, product_type,colour, price, date))
+    db.commit()
+    return render_template('responseAmend.html', id=id, brand=brand)
   else:
     return render_template('add.html')
+
+@app.route("/admin/amend-item/", methods=['POST', 'GET'])
+@requires_login
+def amenditem():
+  db = get_db()
+  if request.method == 'POST':
+    id = request.form['id']
+    image = request.files['datafile']
+    image.save('static/img/%s.jpg' %id)
+    brand_amend = request.form['brand']
+    product_name_amend = request.form['product_name']
+    product_type_amend = request.form['product_type']
+    price_amend = request.form['price']
+    colour_amend = request.form['colour']
+    db.cursor().execute('UPDATE clothing SET brand=?, product_name=?, product_type=?, colour=?, price=?  WHERE id=?', (brand_amend, product_name_amend, product_type_amend, colour_amend, price_amend, id)) 
+    db.commit()
+    return "Amendment Successful"
+  else:
+    return render_template('amend.html')
+
+@app.route("/admin/remove-item/", methods=['POST', 'GET'])
+@requires_login
+def removeitem():
+  db = get_db()
+  if request.method == 'POST':
+    id_delete = request.form['id']
+    db.cursor().execute('DELETE FROM clothing WHERE id=(?)', (id_delete,))
+    db.commit()
+    return "Item Removed"
+  else:
+    return render_template('remove.html')
 
 @app.route("/admin/messages/")
 @requires_login
