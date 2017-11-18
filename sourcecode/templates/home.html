@@ -39,7 +39,7 @@
   
   <p>Latest Products</p>
   {% for ex in clothing %}
-    <p>ID: {{ ex[0] }} <a href="brands/{{ ex[1] }}/{{ ex[0]}}"> Brand: {{ ex[1]}} Price: £{{ [ex5] }}</a></p>
+    <p>ID: {{ ex[0] }} <a href="brands/{{ ex[1] }}/{{ ex[0]}}"> Brand: {{ ex[1]}} Price: £{{ ex[5] }}</a></p>
     <p>Date: {{ex[6] }} <p>
   {% endfor %}
 {% endblock %}

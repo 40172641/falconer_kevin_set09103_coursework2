@@ -2,21 +2,29 @@
 <body>
   <h2> Add Item </h2>
 <ul>
-  <form action="{{ url_for('upload') }}" method="post" enctype=multipart/form=data name="form">
+  <form action="" method="post" enctype="multipart/form-data" name="form>
     <div>
       <label for="name">Brand:</label>
       <input type="text" name="brand" id="brand">
     </div>
     <div>
-      <label for="product_type":>Product Type:</label>
+      <label for"product_name">Product Name:</label>
+      <input type="text" name="product_name" id="brand">
+    </div>
+    <div>
+      <label for="product_type">Product Type:</label>
       <input type="text" name="product_type" id="product_type">
+    </div>
+    <div>
+        <label for="colour">Colour:</label>
+        <input type="text" name="colour" id="product_type"
     </div>
     <div>
       <label for="price">Price</label>
       <input type="text" name="price" id="price">
-    </div>
-    <div>
-      <input type="file" name="file" />
+      </div>
+     <input type="file" name="datafile">
+  <div>
     <div></div>
     <input type="submit" name="submit" id="submit">
   </form>

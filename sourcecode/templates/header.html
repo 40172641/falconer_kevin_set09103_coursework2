@@ -3,6 +3,28 @@
  <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" />
  <link rel="stylesheet" href="static/css/header.css">
 </head>
+<script>
+function validateForm(){
+    var x = document.forms["form"]["name"].value;
+    if (x == "" || x ==" ")
+    {
+      alert("Name must be filled out")
+      return false;
+    }
+    var y = document.forms["form"]["email"].value;
+    if(y == "")
+    {
+      alert("Email must be filled out")
+      return false;
+    }
+    var z = document.forms["form"]["message"].value;
+    if(z == "")
+    {
+      alert("Address must be filled out")
+      return false;
+    }
+}
+</script>
 <body>
  <h1><a href="/"> Foundation</a></h1>
 <nav class="container">
