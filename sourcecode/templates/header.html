@@ -2,6 +2,7 @@
 <head>
   <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" />
   <link rel="stylesheet" link href="{{url_for('static',filename='css/header.css') }}" /> 
+  <title>Foundation Clothing</title>
  </head>
  <body>
  <h1> Foundation </h1>
@@ -37,8 +38,16 @@
 </div>
 </nav>
 </div>
-      
-      {% block content %} {% endblock %} 
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+  {% endwith %}
+  {% block content %} {% endblock %} 
       </body>
 </html>
 

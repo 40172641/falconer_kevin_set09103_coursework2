@@ -103,6 +103,12 @@ def clothing():
   clothing = db.cursor().execute('SELECT * FROM clothing ORDER BY product_name')
   return render_template('clothing.html', clothing=clothing)
 
+@app.route('/clothing/<product_type>/')
+def product_type(product_type):
+  db = get_db()
+  product = db.cursor().execute('SELECT * FROM clothing WHERE product_type=?',(product_type,))
+  return render_template('clothing.html', clothing=product)
+
 @app.route('/latest/')
 def latest():
   db = get_db()
@@ -182,14 +188,18 @@ def messages():
 
 @app.route("/login/", methods=['GET', 'POST'])
 def login():
+    error = None
     if request.method == 'POST':
         user = request.form['email']
         pw = request.form['password']
-
-        if check_auth(request.form['email'], request.form['password']):
-          session['logged_in'] = True
-          return redirect(url_for('.admin'))
-    return render_template('login.html')
+        if request.form['email'] !='admin':
+          error = 'Invalid Credentials'
+        else:
+          if check_auth(request.form['email'], request.form['password']):
+            session['logged_in'] = True
+            flash('You were successfully signed in')
+            return redirect(url_for('.admin'))
+    return render_template('login.html', error=error)
 
 @app.route('/register/')
 def register():
