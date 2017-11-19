@@ -70,6 +70,7 @@ def init_dbcontact():
           db.cursor().executescript(f.read())
         db.commit()
 
+#Home page for the Website
 @app.route('/')
 def route():
         db = get_db()
@@ -85,7 +86,7 @@ def brands():
 @app.route('/brands/<brand>/')
 def brand(brand):
   db=get_db()
-  clothing = db.cursor().execute('SELECT * FROM clothing WHERE brand=?',(brand,)) 
+  clothing = db.cursor().execute('SELECT * FROM clothing WHERE brand=?',(brand,))
   return render_template('brand.html', clothing=clothing, id=id)
 
 @app.route('/brands/<brand>/<id>')
@@ -93,10 +94,20 @@ def product(brand, id):
   db = get_db()
   json_file=open('static/foundation.json').read()
   brands=json.loads(json_file)
-  clothing = db.cursor().execute('SELECT * FROM clothing WHERE brand=? AND id=?',(brand, id))
- # for brand in brands:
-  #  if brand['id']==id:
-  return render_template('product.html', clothing=clothing, brands=brand,id=id)
+  brand_id = db.cursor().execute('SELECT * FROM clothing WHERE brand=? AND id=?',(brand, id))
+  return render_template('product.html', clothing=brand_id, brands=brand,id=id)
+
+@app.route('/clothing/')
+def clothing():
+  db = get_db()
+  clothing = db.cursor().execute('SELECT * FROM clothing ORDER BY product_name')
+  return render_template('clothing.html', clothing=clothing)
+
+@app.route('/latest/')
+def latest():
+  db = get_db()
+  latest = db.cursor().execute('SELECT * FROM clothing ORDER BY date LIMIT 10')
+  return render_template('latest.html', clothing=latest)
 
 @app.route('/logout/')
 def logout():
@@ -127,7 +138,7 @@ def additem():
     date = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
     db.cursor().execute('INSERT INTO clothing VALUES(?,?,?,?,?,?,?)',(id, brand, product_name, product_type,colour, price, date))
     db.commit()
-    return render_template('responseAmend.html', id=id, brand=brand)
+    return render_template('responseadd.html', id=id, brand=brand)
   else:
     return render_template('add.html')
 
@@ -146,7 +157,7 @@ def amenditem():
     colour_amend = request.form['colour']
     db.cursor().execute('UPDATE clothing SET brand=?, product_name=?, product_type=?, colour=?, price=?  WHERE id=?', (brand_amend, product_name_amend, product_type_amend, colour_amend, price_amend, id)) 
     db.commit()
-    return "Amendment Successful"
+    return render_template('responseAmend.html', id=id, brand_amend=brand)
   else:
     return render_template('amend.html')
 
@@ -158,7 +169,7 @@ def removeitem():
     id_delete = request.form['id']
     db.cursor().execute('DELETE FROM clothing WHERE id=(?)', (id_delete,))
     db.commit()
-    return "Item Removed"
+    return render_template('responseRemove.html')
   else:
     return render_template('remove.html')
 
