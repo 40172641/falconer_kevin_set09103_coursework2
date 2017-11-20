@@ -1,53 +1,66 @@
 <html>
 <head>
-  <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet" />
-  <link rel="stylesheet" link href="{{url_for('static',filename='css/header.css') }}" /> 
-  <title>Foundation Clothing</title>
- </head>
- <body>
- <h1> Foundation </h1>
-<nav class="container">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<style>
+body {
+    margin: 30px 0px;
+}
+.navbar-default .navbar-nav > li.dropdown:hover > a, 
+.navbar-default .navbar-nav > li.dropdown:hover > a:hover,
+.navbar-default .navbar-nav > li.dropdown:hover > a:focus {
+    background-color: rgb(231, 231, 231);
+    color: rgb(85, 85, 85);
+}
+li.dropdown:hover > .dropdown-menu {
+    display: block;
+}
+</style>
+<body>
+<h1>Foundation</h1>
+<div class="container">
 <nav class="navbar navbar-default" role="navigation">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
-    <div class="navbar-header"> 
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="/">Home</a>
+    </div>
+
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav navbar-center">
+      <ul class="nav navbar-nav">
+        <li><a href="/latest/">Latest Clothing</a></li>
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Brands<b class="caret"></b></a>
           <ul class="dropdown-menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
+            <li><a href="/brands/Nike">Nike</a></li>
+            <li><a href="/brands/Adidas/">Adidas</a></li>
+            <li><a href="/brands/Stussy/">Stussy</a></li>
             <li class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-            <li class="divider"></li>
-            <li><a href="#">One more separated link</a></li>
+            <li><a href="/brands/">All Brands</a></li>
           </ul>
         </li>
       <li class="dropdown">
-      <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-      <ul class="dropdown-menu">
-        <li><a href="#">Action</a><li>
-        <li><a href="#">Something</a></li>
+       <a href="#" class="dropdown-toggle" data-toggle="dropdown">Clothing<b class="caret"></b></a>
+       <ul class="dropdown-menu">
+        <li><a href="/clothing/Jackets/">Jackets</a></li>
+       </ul>
+      </li>
       </ul>
-    </li>
-  </ul>
-  </div>
-</div>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/login/">Log In</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+      </div>
+     </div>
 </nav>
 </div>
-  {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-  {% endwith %}
-  {% block content %} {% endblock %} 
-      </body>
+{% block content %}{% endblock %}
+</body>
 </html>
-

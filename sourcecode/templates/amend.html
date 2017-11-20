@@ -1,6 +1,14 @@
 <html>
+<head>
+<title>ADMIN: Remove Item</title>
+<link href="{{ url_for('static', filename='css/bootstrap.min.css') }}"
+rel="stylesheet" />
+</head>
 <body>
-  <h2> Add Item </h2>
+  <h2> Amend Item </h2>
+  <h4> Provided you have the correct ID number of a certain product, You can
+  modify any of the meta data relating to the product, and the changes will be
+  displayed once submitted </h4>
 <ul>
   <form action="" method="post" enctype="multipart/form-data" name="form>
     <div>
@@ -33,5 +41,6 @@
     <input type="submit" name="submit" id="submit">
   </form>
 </ul>
+<h5><a href="/admin/">Return to Admin View</a></h5>
 </body>
 </html>

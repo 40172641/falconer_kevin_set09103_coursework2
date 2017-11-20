@@ -1,5 +1,8 @@
 {% extends "header.html" %}
 {% block content %}
+  <p><a href="/brands/">Brands ></a><a href="/brands/{{brands}}/">
+  {{brands}}</a></p>
+  <p>{{brand}}</p>
   <img src="/static/img/{{id}}.jpg" height="500" width="500"/>
   {% for ex in clothing %}
   <p>Name:  {{ ex[2] }} </p>

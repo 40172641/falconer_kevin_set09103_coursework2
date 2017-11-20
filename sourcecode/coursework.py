@@ -8,9 +8,6 @@ from logging.handlers import RotatingFileHandler
 from functools import wraps
 
 from datetime import datetime
-#from flask.ext.uploads import UploadSet, configure_uploads, IMAGES
-
-#photos = UploadSet('photos', IMAGES)
 
 from flask import Flask, redirect, url_for, render_template, request, session,json, flash
 
@@ -91,10 +88,12 @@ def brand(brand):
   clothing = db.cursor().execute('SELECT * FROM clothing WHERE brand=?',(brand,))
   return render_template('brand.html', clothing=clothing, id=id)
 
+#Product Page
 @app.route('/brands/<brand>/<id>')
 def product(brand, id):
   db = get_db()
   brand_id = db.cursor().execute('SELECT * FROM clothing WHERE brand=? AND id=?',(brand, id))
+  other_products = db.cursor().execute('SELECT * FROM clothing WHERE brand=?',(brand,))
   return render_template('product.html', clothing=brand_id, brands=brand,id=id)
 
 @app.route('/clothing/')
@@ -144,7 +143,7 @@ def additem():
     date = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
     db.cursor().execute('INSERT INTO clothing VALUES(?,?,?,?,?,?,?)',(id, brand, product_name, product_type,colour, price, date))
     db.commit()
-    app.logger.info('New Item Added ? ? ? ?' (id, brand, product_type,product_name))
+   # app.logger.info('New Item Added ? ? ? ?' (id, brand, product_type,product_name))
     return render_template('responseadd.html', id=id, brand=brand)
   else:
     return render_template('add.html')
@@ -164,7 +163,7 @@ def amenditem():
     colour_amend = request.form['colour']
     db.cursor().execute('UPDATE clothing SET brand=?, product_name=?, product_type=?, colour=?, price=?  WHERE id=?', (brand_amend, product_name_amend, product_type_amend, colour_amend, price_amend, id)) 
     db.commit()
-    return render_template('responseAmend.html', id=id, brand_amend=brand)
+    return render_template('responseAmend.html', id=id, brand=brand_amend)
   else:
     return render_template('amend.html')
 
