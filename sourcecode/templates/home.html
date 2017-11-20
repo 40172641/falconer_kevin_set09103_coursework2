@@ -1,10 +1,17 @@
 {% extends "header.html" %}
   {% block content %}
-  
+    <div class="front-image">
+      <img src="/static/img/25648.jpg" height="450" width="400"/>
+    </div>
+    <div class="front-button">
+    <form action="/brands/HUF/">
+    <button type="submit" class="button1">Shop HUF </button>
+    </form>
   <p>Latest Products</p>
   {% for ex in clothing %}
-    <p>ID: {{ ex[0] }} <a href="brands/{{ ex[1] }}/{{ ex[0]}}"> Brand: {{ ex[1]}} Price: £{{ ex[5] }}</a></p>
-    <p>Date: {{ex[6] }} <p>
+    
+    <img src="/static/img/{{ex[0]}}.jpg" height="200" width="200" align="left"/>
+    <p align="left"><a href="brands/{{ ex[1] }}/{{ ex[0]}}"> Brand: {{ ex[1]}} Price: £{{ex[5] }}</a></p>
   {% endfor %}
 {% endblock %}
 

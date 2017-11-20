@@ -1,4 +1,4 @@
-from flask import Flask, g
+from flask import Flask
 import sqlite3
 import random
 import bcrypt
@@ -25,6 +25,7 @@ def check_auth(email, password):
       return True
     return False
 
+#Method which can be added to a route which requires the user to be logged in to view the page
 def requires_login(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -33,7 +34,7 @@ def requires_login(f):
             return redirect(url_for('.login'))
         return f(*args, **kwargs)
     return decorated
-
+#Establishes database connection to the Foundation database which contains the clothing table
 def get_db():
   db = getattr(g, 'db', None)
   if db is None:
@@ -76,12 +77,13 @@ def route():
         clothing = db.cursor().execute('SELECT * FROM clothing ORDER BY date DESC LIMIT 5')
         return render_template('home.html', clothing=clothing)
 
+#
 @app.route('/brands/')
 def brands():
     db=get_db()
     clothing = db.cursor().execute('SELECT DISTINCT brand FROM clothing ORDER BY brand')
     return render_template('brands.html', clothing=clothing)
-
+#Renders template with all items from a specfic brand provided it matches a database entry
 @app.route('/brands/<brand>/')
 def brand(brand):
   db=get_db()
@@ -96,45 +98,48 @@ def product(brand, id):
   other_products = db.cursor().execute('SELECT * FROM clothing WHERE brand=?',(brand,))
   return render_template('product.html', clothing=brand_id, brands=brand,id=id)
 
+#Renders template with all items in the website
 @app.route('/clothing/')
 def clothing():
   db = get_db()
   clothing = db.cursor().execute('SELECT * FROM clothing ORDER BY product_name')
   return render_template('clothing.html', clothing=clothing)
 
+#Renders template based on the product_type variable
 @app.route('/clothing/<product_type>/')
 def product_type(product_type):
   db = get_db()
   product = db.cursor().execute('SELECT * FROM clothing WHERE product_type=?',(product_type,))
   return render_template('clothing.html', clothing=product)
 
+#Returns template with latest addition to the Website/Webpage
 @app.route('/latest/')
 def latest():
   db = get_db()
   latest = db.cursor().execute('SELECT * FROM clothing ORDER BY date LIMIT 10')
   return render_template('latest.html', clothing=latest)
 
+#Logs out admin
 @app.route('/logout/')
 def logout():
     session['logged_in'] = False
     return redirect(url_for('.login'))
 
+#Renders admin page
 @app.route("/admin/")
 @requires_login
 def admin():
   return render_template("admin.html")
 
+#Adds a new item to the Database and Website
 @app.route("/admin/add-item/", methods=['POST', 'GET'])
 @requires_login
 def additem():
   db = get_db()
   if request.method == 'POST':
-    id = random.randrange(1000,100000,2)
-    print id
-   # os.makedirs('static/img/%s' %id)
+    id = random.randrange(1000,100000,2) #Generates Random number between 1000-100000 with a decimal of two
     image = request.files['datafile']
     image.save('static/img/%s.jpg' %id)
-    print id
     brand = request.form['brand']
     product_type = request.form['product_type']
     price = request.form['price']
@@ -147,7 +152,7 @@ def additem():
     return render_template('responseadd.html', id=id, brand=brand)
   else:
     return render_template('add.html')
-
+#If the Admin inputs the correct ID number, then the item with that ID number will be updated with what is input in the forms
 @app.route("/admin/amend-item/", methods=['POST', 'GET'])
 @requires_login
 def amenditem():
@@ -155,7 +160,7 @@ def amenditem():
   if request.method == 'POST':
     id = request.form['id']
     image = request.files['datafile']
-    image.save('static/img/%s.jpg' %id)
+    image.save('static/img/%s.jpg' %id) #Saves the Image to Static Image folder, with the input ID
     brand_amend = request.form['brand']
     product_name_amend = request.form['product_name']
     product_type_amend = request.form['product_type']
@@ -167,6 +172,7 @@ def amenditem():
   else:
     return render_template('amend.html')
 
+#Renders webpage so that if the Admin inputs a correct ID Number, then the item will be removed
 @app.route("/admin/remove-item/", methods=['POST', 'GET'])
 @requires_login
 def removeitem():
@@ -179,6 +185,7 @@ def removeitem():
   else:
     return render_template('remove.html')
 
+#Lists all of the feedback from the contact us section
 @app.route("/admin/messages/")
 @requires_login
 def messages():
@@ -186,6 +193,7 @@ def messages():
   messages = db.cursor().execute('SELECT * FROM messages ORDER BY date DESC')
   return render_template('messages.html', messages=messages)
 
+#Login page, Will flash error if login is inccorect
 @app.route("/login/", methods=['GET', 'POST'])
 def login():
     error = None
@@ -201,10 +209,6 @@ def login():
             return redirect(url_for('.admin'))
     return render_template('login.html', error=error)
 
-@app.route('/register/')
-def register():
-  return render_template("register.html")
-
 @app.route("/contact/", methods=['POST', 'GET'])
 def contact():
   db=get_dbcontact()
@@ -213,7 +217,7 @@ def contact():
     names = request.form['name']
     email = request.form['email']
     message = request.form['message']
-    timestamp = datetime.now().strftime('%d-%m-%Y %H:%M')
+    timestamp = datetime.now().strftime('%d-%m-%Y %H:%M')#Get current time to be stored in date coloumn
     db.cursor().execute('INSERT INTO messages VALUES(?,?,?,?)',(names, email, message, timestamp))
     db.commit()
     return render_template('response.html', name=names)

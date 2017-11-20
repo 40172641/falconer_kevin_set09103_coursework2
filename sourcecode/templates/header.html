@@ -1,7 +1,35 @@
 <html>
 <head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
+<script>
+function validateForm(){
+    var x = document.forms["form"]["name"].value;
+    if (x == "" || x ==" ")
+    {
+      alert("Name must be filled out")
+      return false;
+    }
+    var y = document.forms["form"]["email"].value;
+    if(y == "")
+    {
+      alert("Email must be filled out")
+      return false;
+    }
+    var z = document.forms["form"]["message"].value;
+    if(z == "")
+    {
+      alert("Address must be filled out")
+      return false;
+    }
+}
+
+</script>
+
 <style>
 body {
     margin: -10px 0px;
@@ -12,10 +40,36 @@ body {
   left:925px;
   top:-400px;
 }
+#product li
+{
+  position:relative;
+  left:100px;
+  display:inline;
+}
 .image
 {
   position:relative;
   left:425px;
+
+}
+.front-image
+{
+  position:relative;
+  left:425px;
+}
+.button1
+{
+  position:relative;
+  left:425px;
+  top: -25px;
+
+  color: black; 
+}
+
+.button1:hover
+{
+background-color: #555555;
+    color: white;
 
 }
 .navbar-default .navbar-nav > li.dropdown:hover > a, 
@@ -27,6 +81,7 @@ body {
 li.dropdown:hover > .dropdown-menu {
     display: block;
 }
+
 </style>
 <body>
 <h1>Foundation</h1>
