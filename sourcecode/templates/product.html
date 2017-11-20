@@ -1,14 +1,26 @@
 {% extends "header.html" %}
 {% block content %}
+  <div class="image">
   <p><a href="/brands/">Brands ></a><a href="/brands/{{brands}}/">
   {{brands}}</a></p>
-  <p>{{brand}}</p>
-  <img src="/static/img/{{id}}.jpg" height="500" width="500"/>
+  
+  <img src="/static/img/{{id}}.jpg" height="500" width="400" align="middle"/>
+  </div>
   {% for ex in clothing %}
-  <p>Name:  {{ ex[2] }} </p>
-  <p>Brand: {{ex[1] }} </p>
-  <p>Colour: {{ex[4] }} </p>
-  <p>Price: £{{ex[5] }} </p>
+  <div class="details">
+  <h4>{{ ex[2] }} </h4>
+  <h4>Brand: {{ex[1] }} </h4>
+  <h4>Colour: {{ex[4] }} </h4>
+  <h4>Price: £{{ex[5] }}</h4>
+  <label>Size</label>
+  <select>
+    <option value="Small">Small</option>
+    <option value="Medium">Medium</option>
+    <option value="Large">Large</option>
+    <option value="Extra Large">Extra Large</option>
+  
+ 
+  </div>
   {% endfor %}
 {% endblock %}
 
