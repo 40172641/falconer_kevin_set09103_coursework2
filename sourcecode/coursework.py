@@ -3,6 +3,8 @@ import sqlite3
 import random
 import bcrypt
 import os
+import logging
+from logging.handlers import RotatingFileHandler
 from functools import wraps
 
 from datetime import datetime
@@ -92,8 +94,6 @@ def brand(brand):
 @app.route('/brands/<brand>/<id>')
 def product(brand, id):
   db = get_db()
-  json_file=open('static/foundation.json').read()
-  brands=json.loads(json_file)
   brand_id = db.cursor().execute('SELECT * FROM clothing WHERE brand=? AND id=?',(brand, id))
   return render_template('product.html', clothing=brand_id, brands=brand,id=id)
 
@@ -144,6 +144,7 @@ def additem():
     date = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
     db.cursor().execute('INSERT INTO clothing VALUES(?,?,?,?,?,?,?)',(id, brand, product_name, product_type,colour, price, date))
     db.commit()
+    app.logger.info('New Item Added ? ? ? ?' (id, brand, product_type,product_name))
     return render_template('responseadd.html', id=id, brand=brand)
   else:
     return render_template('add.html')
@@ -226,4 +227,7 @@ def page_not_found(error):
   return render_template('error.html'),404
 
 if __name__ == "__main__":
+  #logHandler = RotatingFileHandler('static/log/login.log', maxBytes=1000, backupCount=1)
+  #logHandler.setLevel(logging.INFO)
+  #app.logger.addHander(logHandler)
   app.run(host='0.0.0.0', debug=True)
