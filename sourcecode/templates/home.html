@@ -9,9 +9,11 @@
     </form>
   <p>Latest Products</p>
   {% for ex in clothing %}
-    
-    <img src="/static/img/{{ex[0]}}.jpg" height="200" width="200" align="left"/>
-    <p align="left"><a href="brands/{{ ex[1] }}/{{ ex[0]}}"> Brand: {{ ex[1]}} Price: £{{ex[5] }}</a></p>
-  {% endfor %}
+    <ul class="home">
+    <li><img src="/static/img/{{ex[0]}}.jpg" height="200" width="200" /></li>
+    <li><a href="brands/{{ ex[1] }}/{{ ex[0]}}"> Brand: {{ ex[1]}} Price:
+    £{{ex[5] }}</></li>
+    </ul>
+{% endfor %}
 {% endblock %}
 

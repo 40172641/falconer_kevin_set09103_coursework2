@@ -1,0 +1,54 @@
+<html>
+<head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<style>
+body
+{
+  margin:20px;
+}
+ul{
+  width: 33%;
+  float: left;
+}
+
+ul{
+  list-style-type:none;
+  margin:0;
+  padding:0;
+}
+
+li
+{
+  postion:relative;
+  left:0px;
+}
+</style>
+<body>
+  <h1> ADMIN: All Products </h1>
+  <h2> From within this view, you can find out all the meta date regarding
+  products on the website</h2>
+  <h4><a href="/admin/">Admin</a></h4>
+  <h4><a href="/admin/add-item/">Add Item</a></h4>
+  <h4><a href="/admin/amend-item/">Amend Item</a></h4>
+  <h4><a href="/admin/remove-item/">Remove Item</a></h4>
+  <div>
+  </div>
+  <br/></br>
+  {% for ex in clothing %}
+  <div id="product">
+  <ul>
+  <li><img src="/static/img/{{ex[0]}}.jpg" height="50" width="50" /></li>
+  <li>ID: {{ex[0]}}</li>
+  <li>Product Name:<a href='/brands/{{ex[1]}}/{{ ex[0] }}'>{{ ex[2] }}</a></li>
+  <li>Brand:{{ex[1]}}
+  <li>Product Type:{{ex[3]}}</li>
+  <li>Colour:{{ex[4]}}</li>
+  <li>Price: £{{ ex[5] }}</li>
+  <li>Date Added: {{ex[6]}} </li><br/></br>
+  </ul>
+  </div>
+  {% endfor %}
+</body>
+</html>
+

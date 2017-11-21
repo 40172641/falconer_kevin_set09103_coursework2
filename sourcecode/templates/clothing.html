@@ -1,10 +1,13 @@
 {% extends "header.html" %}
 {% block content %}
+  <h2>Clothing: {{product_type}} </h2>
   {% for ex in clothing %}
+  <ul>
   <img src="/static/img/{{ex[0]}}.jpg" height="200" width="200" />
-  <p><a href='/brands/{{ ex[1] }}/{{ ex[0]}}'>{{ ex[2] }}</a></p>  
-  <p>Product Type: {{ex[3] }} </p>
-  <p>Price: £{{ ex[5] }} </p>
+  <li><a href='/brands/{{ ex[1] }}/{{ ex[0]}}'>{{ ex[2] }}</a></li>  
+  <li>Product Type: {{ex[3] }} </li>
+  <li>Price: £{{ ex[5] }} </li>
+  </ul>
   {% endfor %}
 {% endblock %}
 

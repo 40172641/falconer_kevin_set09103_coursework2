@@ -4,6 +4,12 @@
 <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}"
 rel="stylesheet" />
 </head>
+<style>
+li
+{
+  list-style:none;
+}
+</style>
 <body>
 <h1>ADMIN PAGE</h1>
 <h2>Welcome to the Admin Page</h2>
@@ -15,6 +21,7 @@ Feedback on the Site </h3>
 <li><a href='remove-item/'>Remove Item</a></li>
 <li><a href='amend-item/'>Amend Item</a></li>
 <li><a href='messages/'>Feedback</a></li>
+<li><a href="all/">All items</a></li>
 </ul>
 <p><a href='/logout/'>Log out</a></p>
 </body>

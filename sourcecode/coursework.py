@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, g
 import sqlite3
 import random
 import bcrypt
@@ -34,6 +34,7 @@ def requires_login(f):
             return redirect(url_for('.login'))
         return f(*args, **kwargs)
     return decorated
+
 #Establishes database connection to the Foundation database which contains the clothing table
 def get_db():
   db = getattr(g, 'db', None)
@@ -112,11 +113,17 @@ def product_type(product_type):
   product = db.cursor().execute('SELECT * FROM clothing WHERE product_type=?',(product_type,))
   return render_template('clothing.html', clothing=product)
 
+@app.route('/clothing/products/')
+def all_products():
+  db = get_db()
+  product = db.cursor().execute('SELECT DISTINCT product_type FROM clothing ORDER by product_type')
+  return render_template('type.html', clothing=product)
+
 #Returns template with latest addition to the Website/Webpage
 @app.route('/latest/')
 def latest():
   db = get_db()
-  latest = db.cursor().execute('SELECT * FROM clothing ORDER BY date LIMIT 10')
+  latest = db.cursor().execute('SELECT * FROM clothing ORDER BY date DESC LIMIT 10')
   return render_template('latest.html', clothing=latest)
 
 #Logs out admin
@@ -152,6 +159,7 @@ def additem():
     return render_template('responseadd.html', id=id, brand=brand)
   else:
     return render_template('add.html')
+
 #If the Admin inputs the correct ID number, then the item with that ID number will be updated with what is input in the forms
 @app.route("/admin/amend-item/", methods=['POST', 'GET'])
 @requires_login
@@ -184,6 +192,13 @@ def removeitem():
     return render_template('responseRemove.html')
   else:
     return render_template('remove.html')
+
+@app.route("/admin/all/")
+@requires_login
+def all():
+  db = get_db()
+  all = db.cursor().execute('SELECT * FROM clothing ORDER BY product_name')
+  return render_template('adminall.html', clothing=all)
 
 #Lists all of the feedback from the contact us section
 @app.route("/admin/messages/")
