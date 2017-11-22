@@ -155,7 +155,7 @@ def additem():
     date = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
     db.cursor().execute('INSERT INTO clothing VALUES(?,?,?,?,?,?,?)',(id, brand, product_name, product_type,colour, price, date))
     db.commit()
-   # app.logger.info('New Item Added ? ? ? ?' (id, brand, product_type,product_name))
+    app.logger.info('New Item Added')
     return render_template('responseadd.html', id=id, brand=brand)
   else:
     return render_template('add.html')
@@ -174,8 +174,9 @@ def amenditem():
     product_type_amend = request.form['product_type']
     price_amend = request.form['price']
     colour_amend = request.form['colour']
-    db.cursor().execute('UPDATE clothing SET brand=?, product_name=?, product_type=?, colour=?, price=?  WHERE id=?', (brand_amend, product_name_amend, product_type_amend, colour_amend, price_amend, id)) 
+    db.cursor().execute('UPDATE clothing SET brand=?, product_name=?, product_type=?, colour=?, price=?  WHERE id=?', (brand_amend, product_name_amend, product_type_amend, colour_amend, price_amend, id))
     db.commit()
+    app.logger.info("Item Amended")
     return render_template('responseAmend.html', id=id, brand=brand_amend)
   else:
     return render_template('amend.html')
@@ -190,6 +191,7 @@ def removeitem():
     db.cursor().execute('DELETE FROM clothing WHERE id=(?)', (id_delete,))
     db.commit()
     return render_template('responseRemove.html')
+    app.logger.info('Item Removed')
   else:
     return render_template('remove.html')
 
@@ -218,6 +220,7 @@ def login():
         pw = request.form['password']
         if request.form['email'] !='admin':
           error = 'Invalid Credentials'
+          app.logger.error("Error, Invalid Login")
         else:
           if check_auth(request.form['email'], request.form['password']):
             session['logged_in'] = True
@@ -246,7 +249,7 @@ def page_not_found(error):
   return render_template('error.html'),404
 
 if __name__ == "__main__":
-  #logHandler = RotatingFileHandler('static/log/login.log', maxBytes=1000, backupCount=1)
-  #logHandler.setLevel(logging.INFO)
-  #app.logger.addHander(logHandler)
+  logHandler = RotatingFileHandler('static/coursework.log', maxBytes=1000, backupCount=1)
+  logHandler.setLevel(logging.INFO)
+  app.logger.addHandler(logHandler)
   app.run(host='0.0.0.0', debug=True)
