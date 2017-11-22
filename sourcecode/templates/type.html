@@ -1,7 +1,8 @@
 {% extends "header.html" %}
 {% block content %}
+  <h2 style="text-align:center;"> Product Type's </h2>
   {% for product in clothing %}
-  <p>Name:<a href='/clothing/{{ product[0] }}'> {{ product[0] }} </a></p>
+  <h4 style="text-align:center;">Name:<a href='/clothing/{{ product[0] }}'> {{product[0] }} </a></h4>
   {% endfor %}
 {% endblock %}
 

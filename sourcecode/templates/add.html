@@ -11,20 +11,44 @@ function validateForm()
     alert("Brand must be input")
     return false;
   }
+  var name = document.forms["form"]["product_name"].value;
+  if (name == "")
+  {
+    alert("Product Name must be valid")
+    return false;
+  }
+  var type = document.forms["form"]["product_type"].value;
+  if (type == "")
+  {
+    alert("Product Type must be valid")
+    return false;
+  }
+  var colour = document.forms["form"]["colour"].value;
+  if (colour == "")
+  {
+    alert("Colour must be valid")
+    return false;
+  }
+  var price = document.forms["form"]["price"].value;
+  if (price == "")
+  {
+    alert("Price must be valid")
+    return false;
+  }
 }
 </script>
 <body>
   <h2> Add Item </h2>
   <h4>As the administrator, you can add new products to the website</h4>
 <ul>
-  <form action="" method="post" onsubmit="return validateForm()"  name="form">
+  <form action="" method="post" onsubmit="return validateForm()" enctype="multipart/form-data" name="form">
     <div>
       <label for="brand">Brand:</label>
       <input type="text" name="brand" id="brand">
     </div>
     <div>
       <label for"product_name">Product Name:</label>
-      <input type="text" name="product_name" id="brand">
+      <input type="text" name="product_name" id="product_name">
     </div>
     <div>
       <label for="product_type">Product Type:</label>
@@ -32,7 +56,7 @@ function validateForm()
     </div>
     <div>
         <label for="colour">Colour:</label>
-        <input type="text" name="colour" id="product_type">
+        <input type="text" name="colour" id="colour">
         </div>
     <div>
       <label for="price">Price</label>

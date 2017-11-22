@@ -9,8 +9,7 @@ from functools import wraps
 
 from datetime import datetime
 
-from flask import Flask, redirect, url_for, render_template, request, session,json, flash
-
+from flask import Flask, redirect, url_for, render_template, request, session,json, flash, redirect
 app = Flask(__name__)
 
 db_location = 'static/foundation.db'
@@ -76,7 +75,7 @@ def init_dbcontact():
 def route():
         db = get_db()
         clothing = db.cursor().execute('SELECT * FROM clothing ORDER BY date DESC LIMIT 5')
-        return render_template('home.html', clothing=clothing)
+        return render_template('home.html', clothing=clothing),200
 
 #
 @app.route('/brands/')
@@ -84,12 +83,13 @@ def brands():
     db=get_db()
     clothing = db.cursor().execute('SELECT DISTINCT brand FROM clothing ORDER BY brand')
     return render_template('brands.html', clothing=clothing)
+
 #Renders template with all items from a specfic brand provided it matches a database entry
 @app.route('/brands/<brand>/')
 def brand(brand):
   db=get_db()
   clothing = db.cursor().execute('SELECT * FROM clothing WHERE brand=?',(brand,))
-  return render_template('brand.html', clothing=clothing, id=id)
+  return render_template('brand.html', clothing=clothing, id=id, brand=brand)
 
 #Product Page
 @app.route('/brands/<brand>/<id>')
@@ -206,6 +206,7 @@ def all():
 def messages():
   db = get_dbcontact()
   messages = db.cursor().execute('SELECT * FROM messages ORDER BY date DESC')
+  db.commit()
   return render_template('messages.html', messages=messages)
 
 #Login page, Will flash error if login is inccorect

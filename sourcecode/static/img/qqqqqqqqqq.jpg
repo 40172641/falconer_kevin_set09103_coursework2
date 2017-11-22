@@ -1,0 +1,22 @@
+/**
+ * Auto Generated Java Class.
+ */
+public class ForLoop {
+  
+  public ForLoop() { 
+    /* YOUR CONSTRUCTOR CODE HERE*/
+  }
+  
+  public static void main(String[] args) { 
+    String b = "";
+    for(int i = 0; i < 5; i--)
+    {
+      b+= "*";
+      System.out.println(b);
+    }
+    
+  }
+  
+  /* ADD YOUR CODE HERE */
+  
+}

@@ -1,13 +1,12 @@
 {% extends "header.html" %}
 {% block content %}
+  <h2 style="text-align:center;">Brand: {{brand}}</h2>
   {% for ex in clothing %}
-  <div id="product">
   <ul>
-  <li><img src="/static/img/{{ex[0]}}.jpg" height="200" width="200" /></li>
+  <img src="/static/img/{{ex[0]}}.jpg" height="200" width="200" />
   <li><a href='{{ ex[0] }}'>{{ ex[2] }}</a></li>  
   <li>Price: £{{ ex[5] }}</li>
   </ul>
-  </div>
   {% endfor %}
 {% endblock %}
 
